@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>Batch Cooking — Menus de la semaine</title>
+<meta name="description" content="Menus, liste de courses et déroulé de session de batch cooking.">
+<link rel="stylesheet" href="assets/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍽️</text></svg>">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-row">
+    <h1 class="brand">🍽️ Batch&nbsp;Cooking</h1>
+    <div class="topbar-tools">
+      <label class="week-picker">
+        <span class="sr-only">Semaine</span>
+        <select id="week-select" aria-label="Choisir la semaine"></select>
+      </label>
+      <button id="wakelock-btn" type="button" class="icon-btn" aria-pressed="false"
+              title="Empêcher l'écran de s'éteindre pendant la cuisine">
+        <span aria-hidden="true">💡</span><span class="btn-label">Écran allumé</span>
+      </button>
+    </div>
+  </div>
+  <nav id="tabs" class="tabs" aria-label="Documents de la semaine"></nav>
+</header>
+
+<main id="main">
+  <div id="status" class="status" role="status">Chargement…</div>
+  <article id="doc" class="markdown" hidden></article>
+</main>
+
+<footer class="footer">
+  <button id="reset-checks" type="button" class="ghost-btn">Décocher toutes les cases de cette page</button>
+  <p class="footer-note">Les cases cochées sont mémorisées sur cet appareil uniquement.</p>
+</footer>
+
+<script src="assets/vendor/marked.min.js"></script>
+<script src="assets/vendor/purify.min.js"></script>
+<script src="assets/app.js"></script>
+</body>
+</html>

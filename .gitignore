@@ -1,0 +1,16 @@
+# Fichiers privés — non publiés sur GitHub Pages
+memoire.md
+AGENTS.md
+historique.md
+.github/agents/
+.github/hooks/
+.github/prompts/
+
+# macOS / iCloud
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon?
+._*
+.iCloud*
+*.icloud
