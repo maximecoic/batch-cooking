@@ -140,6 +140,31 @@
       .join('\n');
   }
 
+  function selectAndCopy(text) {
+    // navigator.clipboard.writeText() n'écrit QUE du texte brut. Rappels iOS ne
+    // propose « Ajouter N rappels » que si le presse-papiers contient AUSSI une
+    // version HTML (ce qu'une sélection manuelle + Cmd-C produit naturellement).
+    // On reproduit donc exactement ce mécanisme : sélectionner un <pre> puis
+    // déclencher la commande de copie du navigateur, qui pose les deux formats.
+    const host = document.createElement('pre');
+    host.textContent = text;
+    host.style.cssText = 'position:fixed;top:0;left:0;opacity:0;pointer-events:none;';
+    document.body.appendChild(host);
+
+    const range = document.createRange();
+    range.selectNodeContents(host);
+    const selection = window.getSelection();
+    selection.removeAllRanges();
+    selection.addRange(range);
+
+    let ok = false;
+    try { ok = document.execCommand('copy'); } catch { ok = false; }
+
+    selection.removeAllRanges();
+    host.remove();
+    return ok;
+  }
+
   function wireCopyButtons() {
     els.doc.querySelectorAll('pre').forEach((pre) => {
       const wrap = document.createElement('div');
@@ -153,22 +178,15 @@
       btn.textContent = 'Copier';
       btn.addEventListener('click', async () => {
         const text = linesOf(pre);
-        try {
-          await navigator.clipboard.writeText(text);
-        } catch {
-          // Safari iOS hors contexte sécurisé, ou permission refusée.
-          const ta = document.createElement('textarea');
-          ta.value = text;
-          ta.setAttribute('readonly', '');
-          ta.style.position = 'fixed';
-          ta.style.opacity = '0';
-          document.body.appendChild(ta);
-          ta.select();
-          try { document.execCommand('copy'); } catch { /* rien de plus à tenter */ }
-          ta.remove();
+        let ok = selectAndCopy(text);
+        if (!ok) {
+          try {
+            await navigator.clipboard.writeText(text);
+            ok = true;
+          } catch { ok = false; }
         }
-        btn.textContent = 'Copié ✓';
-        btn.classList.add('copied');
+        btn.textContent = ok ? 'Copié ✓' : 'Échec — sélectionne le texte à la main';
+        btn.classList.toggle('copied', ok);
         setTimeout(() => {
           btn.textContent = 'Copier';
           btn.classList.remove('copied');
@@ -177,6 +195,7 @@
       wrap.appendChild(btn);
     });
   }
+
 
   /* ---------- Rendu ---------- */
 
