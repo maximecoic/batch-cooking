@@ -128,6 +128,18 @@
 
   /* ---------- Bouton « Copier » sur les blocs de code ---------- */
 
+  function linesOf(pre) {
+    // textContent, jamais innerText : innerText dépend du rendu (scroll horizontal
+    // du bloc, retour à la ligne) et peut fusionner les lignes en un seul bloc sur
+    // iOS Safari — Rappels ne crée une tâche par ligne que si chaque ligne est
+    // séparée par un simple \n, sans ligne vide ni \r résiduel.
+    return pre.textContent
+      .split(/\r\n|\r|\n/)
+      .map((line) => line.trim())
+      .filter(Boolean)
+      .join('\n');
+  }
+
   function wireCopyButtons() {
     els.doc.querySelectorAll('pre').forEach((pre) => {
       const wrap = document.createElement('div');
@@ -140,7 +152,7 @@
       btn.className = 'copy-btn';
       btn.textContent = 'Copier';
       btn.addEventListener('click', async () => {
-        const text = pre.innerText.replace(/\n+$/, '');
+        const text = linesOf(pre);
         try {
           await navigator.clipboard.writeText(text);
         } catch {

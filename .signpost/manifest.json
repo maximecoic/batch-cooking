@@ -1,0 +1,29 @@
+{
+  "okf_version": "0.2",
+  "generator": "signpost/v0.2.0",
+  "resource": "git://e4833c3e4889a28aeaa0e949e45dc0649314d5ad",
+  "date": "2026-09-13",
+  "counts": {
+    "nodes": 8,
+    "edges": 5,
+    "clusters": 3
+  },
+  "confidence": {
+    "ambiguous": 0,
+    "extracted": 5,
+    "inferred": 0
+  },
+  "pages": [
+    "index.md",
+    "log.md",
+    "modules/assets.md",
+    "modules/scripts.md",
+    "pipelines/deploy-to-github-pages-deploy.md",
+    "practices.md",
+    "references/github-actions-actions-checkout.md",
+    "references/github-actions-actions-configure-pages.md",
+    "references/github-actions-actions-deploy-pages.md",
+    "references/github-actions-actions-setup-node.md",
+    "references/github-actions-actions-upload-pages-artifact.md"
+  ]
+}
