@@ -211,15 +211,25 @@
     els.doc.hidden = false;
   }
 
+  // Incrémenté à chaque navigation : sert à ignorer la réponse d'un fetch
+  // obsolète qui résoudrait après un fetch plus récent (changement rapide
+  // de semaine/onglet) et écraserait silencieusement le contenu affiché.
+  let requestId = 0;
+
   async function loadDoc(week, slug) {
+    const id = ++requestId;
     current = { week, slug };
     showStatus('Chargement…');
     try {
       const res = await fetch(`menus/${week}/${slug}.md`, { cache: 'no-cache' });
+      if (id !== requestId) return; // une navigation plus récente a eu lieu entre-temps
       if (!res.ok) throw new Error(res.status + ' ' + res.statusText);
-      render(await res.text());
+      const text = await res.text();
+      if (id !== requestId) return;
+      render(text);
       window.scrollTo({ top: 0 });
     } catch (err) {
+      if (id !== requestId) return;
       showStatus(`Impossible de charger menus/${week}/${slug}.md — ${err.message}`, true);
     }
   }
@@ -303,7 +313,13 @@
   });
 
   els.weekSelect.addEventListener('change', () => {
-    location.hash = `#/${els.weekSelect.value}`;
+    // Rester sur le même onglet (ex. Courses) en changeant de semaine ;
+    // ne retomber sur le premier onglet que s'il n'existe pas pour cette semaine.
+    const week = els.weekSelect.value;
+    const entry = index.find((w) => w.week === week);
+    const slugs = entry.files.map(slugOf);
+    const slug = slugs.includes(current.slug) ? current.slug : slugs[0];
+    location.hash = `#/${week}/${slug}`;
   });
 
   window.addEventListener('hashchange', route);
