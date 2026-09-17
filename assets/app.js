@@ -77,6 +77,95 @@
     });
   }
 
+  /* ---------- Sommaire cliquable ---------- */
+
+  const slugify = (text) => text
+    .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '') || 'section';
+
+  function buildToc() {
+    const headings = [...els.doc.querySelectorAll('h2, h3')];
+    if (headings.length < 3) return;
+
+    const used = new Set();
+    const details = document.createElement('details');
+    details.className = 'toc';
+    details.open = window.matchMedia('(min-width: 900px)').matches;
+
+    const summary = document.createElement('summary');
+    summary.textContent = `Sommaire — ${headings.length} sections`;
+    details.appendChild(summary);
+
+    const list = document.createElement('ul');
+    headings.forEach((h) => {
+      let id = slugify(h.textContent);
+      let n = 2;
+      while (used.has(id)) id = `${slugify(h.textContent)}-${n++}`;
+      used.add(id);
+      h.id = id;
+
+      const a = document.createElement('a');
+      a.href = `#${id}`;
+      a.textContent = h.textContent.trim();
+      a.addEventListener('click', (e) => {
+        e.preventDefault();
+        h.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        if (!details.open) return;
+        if (!window.matchMedia('(min-width: 900px)').matches) details.open = false;
+      });
+
+      const li = document.createElement('li');
+      li.className = h.tagName === 'H3' ? 'toc-sub' : 'toc-main';
+      li.appendChild(a);
+      list.appendChild(li);
+    });
+
+    details.appendChild(list);
+    els.doc.prepend(details);
+  }
+
+  /* ---------- Bouton « Copier » sur les blocs de code ---------- */
+
+  function wireCopyButtons() {
+    els.doc.querySelectorAll('pre').forEach((pre) => {
+      const wrap = document.createElement('div');
+      wrap.className = 'code-block';
+      pre.parentNode.insertBefore(wrap, pre);
+      wrap.appendChild(pre);
+
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'copy-btn';
+      btn.textContent = 'Copier';
+      btn.addEventListener('click', async () => {
+        const text = pre.innerText.replace(/\n+$/, '');
+        try {
+          await navigator.clipboard.writeText(text);
+        } catch {
+          // Safari iOS hors contexte sécurisé, ou permission refusée.
+          const ta = document.createElement('textarea');
+          ta.value = text;
+          ta.setAttribute('readonly', '');
+          ta.style.position = 'fixed';
+          ta.style.opacity = '0';
+          document.body.appendChild(ta);
+          ta.select();
+          try { document.execCommand('copy'); } catch { /* rien de plus à tenter */ }
+          ta.remove();
+        }
+        btn.textContent = 'Copié ✓';
+        btn.classList.add('copied');
+        setTimeout(() => {
+          btn.textContent = 'Copier';
+          btn.classList.remove('copied');
+        }, 1800);
+      });
+      wrap.appendChild(btn);
+    });
+  }
+
   /* ---------- Rendu ---------- */
 
   function render(markdown) {
@@ -103,6 +192,8 @@
       a.rel = 'noopener noreferrer';
     });
 
+    wireCopyButtons();
+    buildToc();
     wireCheckboxes();
     els.status.hidden = true;
     els.doc.hidden = false;

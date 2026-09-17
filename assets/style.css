@@ -238,6 +238,73 @@ main {
 
 .markdown pre code { border: 0; padding: 0; background: none; }
 
+/* Bloc de code avec bouton « Copier » (export Rappels iOS) */
+.code-block {
+  position: relative;
+  margin: 1rem 0;
+}
+
+.code-block > pre { margin: 0; }
+
+.copy-btn {
+  position: absolute;
+  top: .5rem;
+  right: .5rem;
+  padding: .35rem .7rem;
+  font: inherit;
+  font-size: .82rem;
+  font-weight: 600;
+  color: var(--accent);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  cursor: pointer;
+  box-shadow: var(--shadow);
+}
+
+.copy-btn:hover { background: var(--accent-soft); }
+.copy-btn.copied { color: var(--surface); background: var(--accent); border-color: var(--accent); }
+
+/* Sommaire cliquable */
+.toc {
+  margin: 0 0 1.75rem;
+  padding: .75rem 1rem;
+  background: var(--accent-soft);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.toc > summary {
+  font-weight: 700;
+  color: var(--accent);
+  cursor: pointer;
+  list-style: none;
+}
+
+.toc > summary::-webkit-details-marker { display: none; }
+.toc > summary::before { content: '▸ '; display: inline-block; transition: transform .15s; }
+.toc[open] > summary::before { content: '▾ '; }
+
+.toc ul {
+  margin: .75rem 0 .25rem;
+  padding: 0;
+  list-style: none;
+}
+
+.toc li { margin: 0; }
+
+.toc a {
+  display: block;
+  padding: .4rem .25rem;
+  color: var(--text);
+  text-decoration: none;
+  border-radius: 6px;
+}
+
+.toc a:hover { background: var(--surface); color: var(--accent); }
+.toc-main > a { font-weight: 600; }
+.toc-sub > a { padding-left: 1.25rem; font-size: .93rem; color: var(--text-soft); }
+
 /* Tableaux : scroll horizontal sur mobile, en-tête lisible */
 .table-scroll {
   overflow-x: auto;

@@ -120,3 +120,49 @@ Sans quantité : à contrôler simplement pour éviter la rupture en pleine sess
 | Boîtes hermétiques nécessaires | **21** + 4 pots d'herbes (détail dans `03-session.md`) |
 
 **Oublis classiques vérifiés :** huile d'olive ✅ · huile de colza ✅ · citron ✅ (3 pièces, usage détaillé) · bouillon ✅ (1,7 L) · ail ✅ (2 têtes) · oignon ✅ · herbes fraîches ✅ (4 bottes) · papier cuisson ✅ (4 feuilles)
+
+---
+
+## 📋 Liste brute — à copier dans Rappels iOS
+
+Une ligne = une tâche. Appuyer sur **Copier**, puis coller dans une liste Rappels : iOS crée automatiquement une tâche par ligne.
+
+```text
+Fenouil 850 g
+Tomates cerises 400 g
+Courgettes 1,1 kg
+Poireaux 700 g
+Brocoli 550 g
+Chou-fleur 1,2 kg
+Potimarron 700 g
+Poivrons rouges 350 g
+Epinards frais 700 g
+Concombre 1
+Oignons jaunes 600 g
+Oignon rouge 200 g
+Ail 2 tetes
+Citrons jaunes 3
+Citron vert 1
+Persil plat 1 botte
+Aneth 1 botte
+Menthe 1 botte
+Ciboule 1 botte
+Dos de cabillaud 500 g
+Paves de saumon 500 g
+Hauts de cuisse de poulet desosses 600 g
+Boeuf hache 5% 400 g
+Oeufs 1 boite de 12
+Haricots blancs 2 bocaux de 400 g
+Lentilles beluga 1 paquet de 250 g
+Haricots rouges 1 bocal de 400 g
+Pois chiches 1 bocal de 400 g
+Boulgour 1 paquet de 500 g
+Tomates concassees 2 boites de 400 g
+Betteraves cuites sous vide 250 g
+Bouillon de legumes peu sale 1,7 L
+Olives noires denoyautees 100 g
+Capres 1 bocal
+Tahini 1 pot
+Citron confit 1
+Amandes effilees 50 g
+```
