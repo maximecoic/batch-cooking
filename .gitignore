@@ -6,6 +6,7 @@ retours.md
 .github/agents/
 .github/hooks/
 .github/prompts/
+.signpost/
 
 # macOS / iCloud
 .DS_Store
