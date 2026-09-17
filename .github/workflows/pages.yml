@@ -30,6 +30,9 @@ jobs:
       - name: Générer l'index des menus
         run: node scripts/build-index.mjs
 
+      - name: Casser le cache CDN sur app.js / style.css (10 min de TTL sinon)
+        run: sed -i "s/__COMMIT__/${GITHUB_SHA::7}/g" index.html
+
       - uses: actions/configure-pages@v5
 
       - uses: actions/upload-pages-artifact@v3
