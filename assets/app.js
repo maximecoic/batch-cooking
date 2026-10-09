@@ -10,6 +10,7 @@
   };
 
   const els = {
+    topbar: document.querySelector('.topbar'),
     weekSelect: document.getElementById('week-select'),
     tabs: document.getElementById('tabs'),
     status: document.getElementById('status'),
@@ -20,10 +21,19 @@
 
   let index = [];
   let current = { week: null, slug: null };
+  const LAST_TAB_KEY = 'bc:last-tab';
 
   /* ---------- Utilitaires ---------- */
 
   const slugOf = (file) => file.replace(/\.md$/, '');
+
+  function readLastTab() {
+    try {
+      return localStorage.getItem(LAST_TAB_KEY);
+    } catch {
+      return null;
+    }
+  }
 
   function formatWeek(week) {
     const d = new Date(week + 'T00:00:00');
@@ -111,9 +121,15 @@
       a.textContent = h.textContent.trim();
       a.addEventListener('click', (e) => {
         e.preventDefault();
-        h.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        if (!details.open) return;
         if (!window.matchMedia('(min-width: 900px)').matches) details.open = false;
+        requestAnimationFrame(() => {
+          const top = window.scrollY + h.getBoundingClientRect().top
+            - els.topbar.getBoundingClientRect().height - 12;
+          window.scrollTo({
+            top: Math.max(0, top),
+            behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth'
+          });
+        });
       });
 
       const li = document.createElement('li');
@@ -276,10 +292,13 @@
     const wantedWeek = index.some((w) => w.week === parts[0]) ? parts[0] : index[0].week;
     const entry = index.find((w) => w.week === wantedWeek);
     const slugs = entry.files.map(slugOf);
-    const wantedSlug = slugs.includes(parts[1]) ? parts[1] : slugs[0];
+    const wantedSlug = [parts[1], readLastTab(), slugs[0]].find((slug) => slugs.includes(slug));
 
     els.weekSelect.value = wantedWeek;
     current = { week: wantedWeek, slug: wantedSlug };
+    try {
+      localStorage.setItem(LAST_TAB_KEY, wantedSlug);
+    } catch {}
     buildTabs(wantedWeek);
     loadDoc(wantedWeek, wantedSlug);
   }
@@ -349,7 +368,9 @@
       return r.json();
     })
     .then((data) => {
-      index = (data.weeks || []).filter((w) => w.files && w.files.length);
+      index = (data.weeks || [])
+        .filter((week) => week.files && week.files.length)
+        .sort((first, second) => second.week.localeCompare(first.week));
       if (!index.length) {
         showStatus('Aucun menu trouvé dans menus/.', true);
         return;
@@ -360,6 +381,11 @@
         opt.textContent = formatWeek(w.week);
         els.weekSelect.appendChild(opt);
       });
+      const latest = index[0];
+      const slugs = latest.files.map(slugOf);
+      const requestedSlug = location.hash.replace(/^#\//, '').split('/')[1];
+      const slug = [readLastTab(), requestedSlug, slugs[0]].find((candidate) => slugs.includes(candidate));
+      history.replaceState(null, '', `#/${latest.week}/${slug}`);
       route();
     })
     .catch((err) => showStatus(`Index des menus introuvable — ${err.message}`, true));
