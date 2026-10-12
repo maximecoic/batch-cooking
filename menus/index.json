@@ -1,6 +1,15 @@
 {
-  "generatedAt": "2026-10-03T11:07:06.122Z",
+  "generatedAt": "2026-10-12T09:44:51.914Z",
   "weeks": [
+    {
+      "week": "2026-10-19",
+      "files": [
+        "01-plats.md",
+        "02-courses.md",
+        "03-session.md",
+        "04-verification.md"
+      ]
+    },
     {
       "week": "2026-10-05",
       "files": [
